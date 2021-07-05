@@ -1,12 +1,13 @@
 from rest_framework import generics
-from social_media_app.serializers import StorySerialzer, StoryListSerialzer, StoryStatusSerializer, StoryCardResponseSerialzer
+from social_media_app.serializers import StorySerialzer, StoryListSerialzer, StoryStatusSerializer, StoryDataSerialzer
 from rest_framework.response import Response
 from social_media_app.models import Story,StoryStatus
 from django.contrib.auth.models import User
 from .pagination import LargeResultsSetPagination
 
 class StoryCreateAPIView(generics.CreateAPIView):
-   
+    """ Admin must be able to add posts containing multiple images and description """
+
     serializer_class = StorySerialzer
     pagination_class = LargeResultsSetPagination
     def post(self, request, *args, **kwargs):
@@ -19,7 +20,10 @@ class StoryCreateAPIView(generics.CreateAPIView):
             return Response("Fail")
 
 class StoryAPIView(generics.ListAPIView):
-
+    """Admin must also be able to tag these post in order to identify which post are similar, 
+        each tag will have weight, posts will sort by this weight in descending order from most similar
+        post to least similar post
+    """
     serializer_class = StoryListSerialzer
     pagination_class = LargeResultsSetPagination
     def get_queryset(self):
@@ -32,6 +36,7 @@ class StoryAPIView(generics.ListAPIView):
 
 
 class StoryStatusCountAPIView(generics.GenericAPIView):
+    """Admin should be able to view the number of like/disliked of a post """
 
     pagination_class = LargeResultsSetPagination
     def get(self, request, id):
@@ -43,7 +48,7 @@ class StoryStatusCountAPIView(generics.GenericAPIView):
         return Response(return_dict)  
 
 class StoryListAPIView(generics.ListAPIView):
-    
+    """API that returns a list of posts"""
     pagination_class = LargeResultsSetPagination
     def get(self,*args, **kwargs): 
         value=[]
@@ -65,8 +70,8 @@ class StoryListAPIView(generics.ListAPIView):
         return Response({"response":value})
 
 class StoryLikeDislikeAPIView(generics.CreateAPIView):
-    
-    serializer_class = StoryCardResponseSerialzer
+    """API for liking and disliking a post"""
+    serializer_class = StoryDataSerialzer
     pagination_class = LargeResultsSetPagination
     def get_queryset(self):
         try:
@@ -85,7 +90,7 @@ class StoryLikeDislikeAPIView(generics.CreateAPIView):
             return Response("Fail") 
 
 class StoryUserAPIView(generics.ListAPIView):
-
+    """API that returns a list of all the users who liked a post"""
     pagination_class = LargeResultsSetPagination
     def get(self,*args, **kwargs): 
         data = StoryStatus.objects.filter(story_id=self.kwargs.get('id')).filter(status="like") 

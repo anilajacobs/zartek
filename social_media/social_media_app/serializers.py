@@ -33,7 +33,7 @@ statuses =(
     ('dislike', 'Dislike'),
 )
   
-class StoryCardResponseSerialzer(serializers.Serializer):
+class StoryDataSerialzer(serializers.Serializer):
     status = serializers.ChoiceField(choices = statuses)
     
     def create(self, validated_data, instance, user):
