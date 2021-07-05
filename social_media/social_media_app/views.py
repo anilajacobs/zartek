@@ -20,7 +20,7 @@ class StoryCreateAPIView(generics.CreateAPIView):
             return Response("Fail")
 
 class StoryAPIView(generics.ListAPIView):
-    """Admin must also be able to tag these post in order to identify which post are similar, 
+    """ Admin must also be able to tag these post in order to identify which post are similar, 
         each tag will have weight, posts will sort by this weight in descending order from most similar
         post to least similar post
     """
@@ -48,7 +48,8 @@ class StoryStatusCountAPIView(generics.GenericAPIView):
         return Response(return_dict)  
 
 class StoryListAPIView(generics.ListAPIView):
-    """API that returns a list of posts"""
+    """ API that returns a list of posts """
+
     pagination_class = LargeResultsSetPagination
     def get(self,*args, **kwargs): 
         value=[]
@@ -70,7 +71,8 @@ class StoryListAPIView(generics.ListAPIView):
         return Response({"response":value})
 
 class StoryLikeDislikeAPIView(generics.CreateAPIView):
-    """API for liking and disliking a post"""
+    """ API for liking and disliking a post """
+
     serializer_class = StoryDataSerialzer
     pagination_class = LargeResultsSetPagination
     def get_queryset(self):
@@ -90,7 +92,8 @@ class StoryLikeDislikeAPIView(generics.CreateAPIView):
             return Response("Fail") 
 
 class StoryUserAPIView(generics.ListAPIView):
-    """API that returns a list of all the users who liked a post"""
+    """ API that returns a list of all the users who liked a post """
+    
     pagination_class = LargeResultsSetPagination
     def get(self,*args, **kwargs): 
         data = StoryStatus.objects.filter(story_id=self.kwargs.get('id')).filter(status="like") 
