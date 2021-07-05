@@ -13,6 +13,7 @@ Url List:
 6. http://127.0.0.1:8000/social_media/story-user-liked/<int:id>/      # id is the id of story
 
 
-
+superuser username: media
+          password: media@123
 
 **NB - Any authentication issue is occured then login superuser in adminpanel
